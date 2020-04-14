@@ -1,13 +1,13 @@
 import React from 'react'
 
-const Person = (props) => {
-  const { person } = props
-
-  return (
+const Person = ({ person, deleteButton }) => {
+    return (
       <>
-        <p>{person.name} {person.number}</p>
+        <p>
+          {person.name} {person.number} <button onClick={deleteButton}>delete</button>
+        </p>
       </>
-  )
-}
+    )
+  }
 
 export default Person

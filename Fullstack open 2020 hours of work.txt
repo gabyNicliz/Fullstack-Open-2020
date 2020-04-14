@@ -1,2 +1,4 @@
              H   M    S			 
 part 2-b -> 04 : 50 : 03
+part 2-c -> 07 : 20 : 00
+part 2-d -> +2 hours
