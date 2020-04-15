@@ -3,12 +3,15 @@ import Person from './components/Person'
 import FilterForm from  './components/FilterForm'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchFilter, setSearchFilter ] = useState('')
+  const [ errorMessage, setErrorMessage ] = useState(null)
+  const [ isError, setIsError ] = useState(false)
 
   useEffect(() => {
     personService
@@ -39,7 +42,18 @@ const App = () => {
       personService
         .create(personObject)
           .then(returnedPerson => {
-          setPersons(persons.concat(personObject))
+          setPersons(persons.concat(returnedPerson))
+          
+          setErrorMessage(
+            `Added ${returnedPerson.name}`
+          )
+          
+          setIsError(false)
+
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+
           setNewName('')
           setNewNumber('')
         })
@@ -48,11 +62,37 @@ const App = () => {
         .confirm(`${personObject.name} is already added to phonebook, replace the old number with a new one?`)) {
           const personToUpdate = persons.find(p => p.name === newName)
           const updatedPerson = { ...personToUpdate, number: newNumber}
-          personService.update(updatedPerson.id, updatedPerson).then(updated =>
-            setPersons(persons.map(person =>
-              person.name !== newName 
-              ? person 
-              : updated)))
+          personService
+            .update(updatedPerson.id, updatedPerson)
+            .then(updated => {
+              setPersons(persons.map(person =>
+                person.name !== newName 
+                ? person 
+                : updated))
+                
+                setErrorMessage(
+                  `${personToUpdate.name}'s phone number was updated`
+                )
+              
+                setIsError(false)
+
+                setTimeout(() => {
+                  setErrorMessage(null)
+                }, 5000)
+              }
+            ).catch(err => {
+                setErrorMessage(
+                  `${personToUpdate.name} was already deleted from the server`
+                )
+                
+                setIsError(true)
+
+                setTimeout(() => {
+                  setErrorMessage(null)
+                }, 5000)
+              }
+            )
+
         setNewName('')
         setNewNumber('')
       }
@@ -64,7 +104,27 @@ const App = () => {
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
       personService.remove(id).then(() => { 
         setPersons(persons.filter(p => p.id  !== personToDelete.id))
-      }).catch((err) => console.log('hehe'))
+        
+        setErrorMessage(
+          `${personToDelete.name} was deleted`
+        )
+        
+        setIsError(false)
+
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }).catch(err => {
+        setErrorMessage(
+          `${personToDelete.name} was already deleted from the server`
+        )
+        
+        setIsError(true)
+
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
     }
   }
 
@@ -90,6 +150,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification 
+        message={errorMessage} 
+        isError={isError}
+      />
       <FilterForm
         searchFilter={searchFilter}
         handleSearchFilterChange={handleSearchFilterChange}
