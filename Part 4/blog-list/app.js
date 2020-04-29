@@ -1,48 +1,23 @@
-const http = require('http')
 const express = require('express')
 const app = express()
-const mongoose = require('mongoose')
-const Blog = require('./models/blog')
-
 const cors = require('cors')
+const mongoose = require('mongoose')
+const logger = require('./utils/logger')
+const config = require('./utils/config')
+const blogsRouter = require('./controllers/blogs')
+
+logger.info('Connecting to MongoDB')
+
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+  logger.info('Connected To MongoDB')
+}).catch((error) => {
+  logger.error('error connection to MongoDB', error.message)
+})
 
 app.use(cors())
-
-const password = 'pass1'
-
-const mongoUrl = `mongodb+srv://blog_list_user1:${password}@cluster0-9ymzb.mongodb.net/test?retryWrites=true&w=majority`
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-
-app.use(cors())
+app.use(express.static('build'))
 app.use(express.json())
 
-app.get('/api/blogs', (request, response) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
-})
+app.use('/api/blogs', blogsRouter)
 
-app.post('/api/blogs', (request, response) => {
-  const body = request.body
-  console.log(body)
-  
-  const blog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes
-  })
-
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    })
-})
-
-const PORT = 3003
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+module.exports = app
