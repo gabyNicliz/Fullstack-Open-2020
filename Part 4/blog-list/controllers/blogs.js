@@ -1,27 +1,47 @@
+/* eslint-disable no-underscore-dangle */
 const blogsRouter = require('express').Router();
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 mongoose.set('useFindAndModify', false);
 
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization');
+
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7);
+  }
+  return null;
+};
+
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
   response.json(blogs.map((blog) => blog.toJSON()));
 });
 
 blogsRouter.post('/', async (request, response) => {
   const { body } = request;
+  const token = getTokenFrom(request);
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' });
+  }
+
+  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
+    user: user._id,
   });
 
   if (blog.title === undefined && blog.url === undefined) {
-    response.status(400).end();
-    return;
+    return response.status(400).end();
   }
 
   if (blog.likes === undefined) {
@@ -29,12 +49,14 @@ blogsRouter.post('/', async (request, response) => {
   }
 
   const savedBlog = await blog.save();
-  response.status(200).json(savedBlog.toJSON());
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
+
+  return response.status(200).json(savedBlog.toJSON());
 });
 
 blogsRouter.put('/:id', async (request, response, next) => {
-  // eslint-disable-next-line prefer-destructuring
-  const body = request.body;
+  const { body } = request;
 
   const blog = {
     title: body.title,
@@ -50,8 +72,21 @@ blogsRouter.put('/:id', async (request, response, next) => {
 });
 
 blogsRouter.delete('/:id', async (request, response) => {
+  const token = getTokenFrom(request);
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+
+  if (!token || !decodedToken) {
+    return response.status(401).json({ error: 'missing or invalid token' });
+  }
+
+  const blog = await Blog.findById(request.params.id);
+
+  if (blog.user.toString() !== decodedToken.id.toString()) {
+    return response.status(401).json({ error: 'unauthorized acces' });
+  }
+
   await Blog.findByIdAndRemove(request.params.id);
-  response.status(204).end();
+  return response.status(204).end();
 });
 
 module.exports = blogsRouter;
