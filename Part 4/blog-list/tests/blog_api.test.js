@@ -71,6 +71,7 @@ describe('when there is initially some blogs saved in the db', () => {
       author: 'test author',
       url: 'test url',
       likes: 1,
+      user: userId,
     };
 
     await api
@@ -92,6 +93,7 @@ describe('when there is initially some blogs saved in the db', () => {
       title: 'new title',
       author: 'new author',
       url: 'new url',
+      user: userId,
     };
 
     await api
@@ -112,6 +114,7 @@ describe('when there is initially some blogs saved in the db', () => {
     const newBlog = {
       author: 'new author',
       likes: 0,
+      user: userId,
     };
 
     await api
