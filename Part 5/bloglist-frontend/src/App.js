@@ -1,95 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
+import BlogListForm from './components/BlogListForm';
+import LoginForm from './components/LoginForm';
+import AddBlogForm from './components/AddBlogForm';
 import './App.css';
-
-const loginForm = (handleLogin, handleLogout, username, password, setUsername, setPassword, user) => {
-    if (user === null) {
-      return (
-        <div>
-          <h2>log in to application</h2>
-          <form onSubmit={handleLogin}>
-            <div>
-              username
-              <input
-                type='text'
-                value={username}
-                onChange={({ target }) => setUsername(target.value)} 
-              />
-          </div>
-          <div>
-            password
-            <input
-              type='text'
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type='submit'>login</button>
-        </form>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <div>
-        {user.username} logged in <button onClick={handleLogout}>logout</button>
-      </div>
-    </div>
-  );
-}
-
-const blogsForm = (handleLogout, user, blogs) => {
-  return (
-    <div>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  );
-}
-
-const addBlogForm = (handleSubmitNewBlog, newTitle, newAuthor, newURL, setNewTitle, setNewAuthor, setNewURL) => {
-  return (
-    <div>
-      <h2>create new</h2>
-      <br></br>
-      <form onSubmit={handleSubmitNewBlog}>
-        <div>
-          title:
-          <input 
-            type='text'
-            value={newTitle}
-            onChange={({ target }) => setNewTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type='text'
-            value={newAuthor}
-            onChange={({ target }) => setNewAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type='text'
-            value={newURL}
-            onChange={({ target }) => setNewURL(target.value)}
-          />
-        </div>
-        <div>
-          <button type='submit'>create</button>
-        </div>
-      </form>
-    </div>
-  );
-}
-
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -182,9 +98,29 @@ const App = () => {
         message={errorMessage}
         isError={isError}
       />
-      {loginForm(handleLogin, handleLogout, username, password, setUsername, setPassword, user)}
-      {user !== null && addBlogForm(handleSubmitNewBlog, newTitle, newAuthor, newURL, setNewTitle, setNewAuthor, setNewURL)}
-      {user !== null && blogsForm(handleLogout, user, blogs)}
+      <LoginForm
+         handleLogin={handleLogin}
+         handleLogout={handleLogout}
+         username={username}
+         password={password}
+         setUsername={setUsername}
+         setPassword={setPassword}
+         user={user}
+      />
+      {user !== null && (
+        <>
+          <AddBlogForm
+            handleSubmitNewBlog={handleSubmitNewBlog}
+            newTitle={newTitle}
+            newAuthor={newAuthor}
+            newURL={newURL}
+            setNewTitle={setNewTitle}
+            setNewAuthor={setNewAuthor}
+            setNewURL={setNewURL}
+          />
+          <BlogListForm blogs={blogs} />
+        </>
+      )}
     </div>
   );
 }
