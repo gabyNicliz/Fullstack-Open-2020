@@ -40,11 +40,14 @@ blogsRouter.post('/', async (request, response) => {
     user: user._id,
   });
 
-  if (blog.title === undefined && blog.url === undefined) {
-    return response.status(400).end();
+  if (!blog.title || !blog.url) {
+    return response
+      .status(400)
+      .json({ error: 'missing title or url' })
+      .end();
   }
 
-  if (blog.likes === undefined) {
+  if (!blog.likes) {
     blog.likes = 0;
   }
 
