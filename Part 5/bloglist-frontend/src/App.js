@@ -3,6 +3,7 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
 import BlogListForm from './components/BlogListForm';
+import Togglable from './components/Togglable';
 import LoginForm from './components/LoginForm';
 import AddBlogForm from './components/AddBlogForm';
 import './App.css';
@@ -91,6 +92,34 @@ const App = () => {
     setNewURL('');
   }
 
+  const blogForm = () => (
+      <Togglable buttonLabel={'new blog'}>
+        <AddBlogForm
+          handleSubmitNewBlog={handleSubmitNewBlog}
+          newTitle={newTitle}
+          newAuthor={newAuthor}
+          newURL={newURL}
+          setNewTitle={setNewTitle}
+          setNewAuthor={setNewAuthor}
+          setNewURL={setNewURL}
+        />
+      </Togglable>
+  );
+
+  const loginForm = () => (
+    <Togglable buttonLabel={'login'}>
+        <LoginForm
+          handleLogin={handleLogin}
+          handleLogout={handleLogout}
+          username={username}
+          password={password}
+          setUsername={setUsername}
+          setPassword={setPassword}
+          user={user}
+        />
+      </Togglable>
+  );
+
   return (
     <div className='App'>
       <h2>blogs</h2>
@@ -98,29 +127,15 @@ const App = () => {
         message={errorMessage}
         isError={isError}
       />
-      <LoginForm
-         handleLogin={handleLogin}
-         handleLogout={handleLogout}
-         username={username}
-         password={password}
-         setUsername={setUsername}
-         setPassword={setPassword}
-         user={user}
-      />
-      {user !== null && (
-        <>
-          <AddBlogForm
-            handleSubmitNewBlog={handleSubmitNewBlog}
-            newTitle={newTitle}
-            newAuthor={newAuthor}
-            newURL={newURL}
-            setNewTitle={setNewTitle}
-            setNewAuthor={setNewAuthor}
-            setNewURL={setNewURL}
-          />
+
+      {user === null ?
+        loginForm() :
+        <div>
+          {user.username} logged in <button onClick={handleLogout}>logout</button>
+          {blogForm()}
           <BlogListForm blogs={blogs} />
-        </>
-      )}
+        </div>
+      }
     </div>
   );
 }

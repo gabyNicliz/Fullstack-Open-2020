@@ -1,6 +1,13 @@
 import React from 'react';
 
-const loginForm = ({ handleLogin, handleLogout, username, password, setUsername, setPassword, user }) => {
+const loginForm = ({ 
+   handleLogin, 
+   username, 
+   password, 
+   setUsername, 
+   setPassword, 
+   user 
+  }) => {
   if (user === null) {
     return (
       <div>
@@ -27,14 +34,6 @@ const loginForm = ({ handleLogin, handleLogout, username, password, setUsername,
       </div>
     );
   }
-
-  return (
-    <div>
-      <div>
-        {user.username} logged in <button onClick={handleLogout}>logout</button>
-      </div>
-    </div>
-  );
 }
 
 export default loginForm;
