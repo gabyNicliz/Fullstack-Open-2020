@@ -14,16 +14,18 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [newTitle, setNewTitle] = useState('');
-  const [newAuthor, setNewAuthor] = useState('');
-  const [newURL, setNewURL] = useState('');
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(sortBlogs(blogs))
     );  
   }, []);
+
+  const sortBlogs = (blogs) => {
+    const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
+    return sortedBlogs;
+  }
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
@@ -66,16 +68,11 @@ const App = () => {
     setUser(null);
   }
 
-  const handleSubmitNewBlog = async (event) => {
-    event.preventDefault();
+  const handleSubmitNewBlog = async (newBlog) => {
     try {
-      const newBlog = await blogService.create({
-        title: newTitle,
-        author: newAuthor,
-        url: newURL,
-      });
-      setBlogs([...blogs, newBlog]);
-      setErrorMessage(`A new blog ${newBlog.title} by ${newBlog.author} added`);
+      const blog = await blogService.create(newBlog);
+      setBlogs(blogs.concat(blog));
+      setErrorMessage(`A new blog ${blog.title} by ${blog.author} added`);
       setTimeout(() => { 
       setErrorMessage(null);
       }, 5000);      
@@ -87,21 +84,20 @@ const App = () => {
         setIsError(false);
       }, 5000);
     }
-    setNewTitle('');
-    setNewAuthor('');
-    setNewURL('');
+  }
+
+  const handleLikeClick = async (newBlog) => {
+    const updatedBlog = await blogService.likeBlog(newBlog);
+    const updatedBlogs = blogs.map((blog) =>
+      blog.id === updatedBlog.id ? updatedBlog : blog
+    );
+    setBlogs(sortBlogs(updatedBlogs));
   }
 
   const blogForm = () => (
       <Togglable buttonLabel={'new blog'}>
         <AddBlogForm
-          handleSubmitNewBlog={handleSubmitNewBlog}
-          newTitle={newTitle}
-          newAuthor={newAuthor}
-          newURL={newURL}
-          setNewTitle={setNewTitle}
-          setNewAuthor={setNewAuthor}
-          setNewURL={setNewURL}
+          createBlog={handleSubmitNewBlog}
         />
       </Togglable>
   );
@@ -133,7 +129,11 @@ const App = () => {
         <div>
           {user.username} logged in <button onClick={handleLogout}>logout</button>
           {blogForm()}
-          <BlogListForm blogs={blogs} />
+          <BlogListForm
+            blogs={blogs}
+            user={user}
+            likeBlogOnClick={handleLikeClick}
+          />
         </div>
       }
     </div>
