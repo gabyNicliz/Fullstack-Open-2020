@@ -94,6 +94,17 @@ const App = () => {
     setBlogs(sortBlogs(updatedBlogs));
   }
 
+  const handleRemoveOnClick = async (blogToRemve) => {
+    const removedBlog = await blogService.removeBlog(blogToRemve);
+    const newBlogs = blogs.filter((blog) => blog.id !== removedBlog.id);
+    
+    for (let i = 0; i < blogs.length; i++) console.log(blogs[i].title);
+
+    setBlogs(newBlogs);
+
+    for (let i = 0; i < blogs.length; i++) console.log(blogs[i].title);
+  }
+
   const blogForm = () => (
       <Togglable buttonLabel={'new blog'}>
         <AddBlogForm
@@ -133,6 +144,7 @@ const App = () => {
             blogs={blogs}
             user={user}
             likeBlogOnClick={handleLikeClick}
+            removeBlogOnClick={handleRemoveOnClick}
           />
         </div>
       }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Blog.css';
 
-const Blog = ({ blog, user, likeBlogOnCLick }) => {
+const Blog = ({ blog, user, likeBlogOnCLick, removeBlogOnClick }) => {
   const [visible, setVisible] = useState(false);
 
   const hideWhenVisible = { display: visible ? 'none' : '' };
@@ -24,6 +24,13 @@ const Blog = ({ blog, user, likeBlogOnCLick }) => {
     });
   }
 
+  const handleRemoveBlogOnClick = (event) => {
+    event.preventDefault();
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
+      removeBlogOnClick(blog);
+    }
+  }
+
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
@@ -34,6 +41,7 @@ const Blog = ({ blog, user, likeBlogOnCLick }) => {
         <p>{blog.url}</p>
         <p>likes: {blog.likes} <button onClick={handleLikeBlogOnClick}>like</button></p>
         <p>{user.username}</p>
+        <button onClick={handleRemoveBlogOnClick}>remove</button>
       </div>
     </div>
   );
