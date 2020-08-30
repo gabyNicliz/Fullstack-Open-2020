@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(sortBlogs(blogs))
-    );  
+    );
   }, []);
 
   const sortBlogs = (blogs) => {
@@ -56,9 +56,9 @@ const App = () => {
     } catch (exeption) {
       setErrorMessage('Wrong credentials');
       setIsError(true);
-      setTimeout(() => { 
-      setErrorMessage(null);
-      setIsError(false);
+      setTimeout(() => {
+        setErrorMessage(null);
+        setIsError(false);
       }, 5000);
     }
   }
@@ -73,9 +73,9 @@ const App = () => {
       const blog = await blogService.create(newBlog);
       setBlogs(blogs.concat(blog));
       setErrorMessage(`A new blog ${blog.title} by ${blog.author} added`);
-      setTimeout(() => { 
-      setErrorMessage(null);
-      }, 5000);      
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     } catch (error) {
       setErrorMessage(error.response.data.error);
       setIsError(true);
@@ -97,7 +97,7 @@ const App = () => {
   const handleRemoveOnClick = async (blogToRemve) => {
     const removedBlog = await blogService.removeBlog(blogToRemve);
     const newBlogs = blogs.filter((blog) => blog.id !== removedBlog.id);
-    
+
     for (let i = 0; i < blogs.length; i++) console.log(blogs[i].title);
 
     setBlogs(newBlogs);
@@ -106,25 +106,25 @@ const App = () => {
   }
 
   const blogForm = () => (
-      <Togglable buttonLabel={'new blog'}>
-        <AddBlogForm
-          createBlog={handleSubmitNewBlog}
-        />
-      </Togglable>
+    <Togglable buttonLabel={'new blog'}>
+      <AddBlogForm
+        createBlog={handleSubmitNewBlog}
+      />
+    </Togglable>
   );
 
   const loginForm = () => (
     <Togglable buttonLabel={'login'}>
-        <LoginForm
-          handleLogin={handleLogin}
-          handleLogout={handleLogout}
-          username={username}
-          password={password}
-          setUsername={setUsername}
-          setPassword={setPassword}
-          user={user}
-        />
-      </Togglable>
+      <LoginForm
+        handleLogin={handleLogin}
+        handleLogout={handleLogout}
+        username={username}
+        password={password}
+        setUsername={setUsername}
+        setPassword={setPassword}
+        user={user}
+      />
+    </Togglable>
   );
 
   return (

@@ -5,7 +5,7 @@ const BlogListForm = ({ blogs, user, likeBlogOnClick, removeBlogOnClick }) => {
   return (
     <div>
       {blogs.map((blog) =>
-        <Blog 
+        <Blog
           key={blog.id}
           blog={blog}
           user={user}
