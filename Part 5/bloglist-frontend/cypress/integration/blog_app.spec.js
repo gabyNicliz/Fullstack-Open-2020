@@ -1,5 +1,3 @@
-const { checkPropTypes } = require('prop-types');
-
 describe('Blog App', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3001/api/testing/reset');
