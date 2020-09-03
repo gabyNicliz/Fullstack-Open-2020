@@ -14,7 +14,7 @@ const Blog = ({ blog, user, likeBlogOnCLick, removeBlogOnClick }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
-  }
+  };
 
   const handleLikeBlogOnClick = (event) => {
     event.preventDefault();
@@ -23,36 +23,36 @@ const Blog = ({ blog, user, likeBlogOnCLick, removeBlogOnClick }) => {
       user: user.id,
       likes: ++blog.likes,
     });
-  }
+  };
 
   const handleRemoveBlogOnClick = (event) => {
     event.preventDefault();
     if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
       removeBlogOnClick(blog);
     }
-  }
+  };
 
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible} className='blog-title-author'>
-        {blog.title} by {blog.author} <button onClick={() => setVisible(!visible)}>show</button>
+        {blog.title} by {blog.author} <button id='show-info' onClick={() => setVisible(!visible)}>show</button>
       </div>
       <div style={showWhenVisible} className='blog-show-all-info'>
-        {blog.title} by {blog.author} <button onClick={() => setVisible(!visible)}>hide</button>
+        {blog.title} by {blog.author} <button id='hide-info' onClick={() => setVisible(!visible)}>hide</button>
         <p>{blog.url}</p>
-        <p>likes: {blog.likes} <button onClick={handleLikeBlogOnClick}>like</button></p>
+        <p>likes: {blog.likes} <button id='like-button' onClick={handleLikeBlogOnClick}>like</button></p>
         <p>{user.username}</p>
-        <button onClick={handleRemoveBlogOnClick}>remove</button>
+        <button id='remove-button' onClick={handleRemoveBlogOnClick}>remove</button>
       </div>
     </div>
   );
-}
+};
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   likeBlogOnCLick: PropTypes.func.isRequired,
   removeBlogOnClick: PropTypes.func.isRequired,
-}
+};
 
-export default Blog
+export default Blog;

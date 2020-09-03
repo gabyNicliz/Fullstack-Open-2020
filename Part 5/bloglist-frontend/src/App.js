@@ -25,7 +25,7 @@ const App = () => {
   const sortBlogs = (blogs) => {
     const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
     return sortedBlogs;
-  }
+  };
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
@@ -61,12 +61,12 @@ const App = () => {
         setIsError(false);
       }, 5000);
     }
-  }
+  };
 
   const handleLogout = () => {
     window.localStorage.clear();
     setUser(null);
-  }
+  };
 
   const handleSubmitNewBlog = async (newBlog) => {
     try {
@@ -84,7 +84,7 @@ const App = () => {
         setIsError(false);
       }, 5000);
     }
-  }
+  };
 
   const handleLikeClick = async (newBlog) => {
     const updatedBlog = await blogService.likeBlog(newBlog);
@@ -92,7 +92,7 @@ const App = () => {
       blog.id === updatedBlog.id ? updatedBlog : blog
     );
     setBlogs(sortBlogs(updatedBlogs));
-  }
+  };
 
   const handleRemoveOnClick = async (blogToRemve) => {
     const removedBlog = await blogService.removeBlog(blogToRemve);
@@ -103,7 +103,7 @@ const App = () => {
     setBlogs(newBlogs);
 
     for (let i = 0; i < blogs.length; i++) console.log(blogs[i].title);
-  }
+  };
 
   const blogForm = () => (
     <Togglable buttonLabel={'new blog'}>
@@ -150,6 +150,6 @@ const App = () => {
       }
     </div>
   );
-}
+};
 
 export default App;

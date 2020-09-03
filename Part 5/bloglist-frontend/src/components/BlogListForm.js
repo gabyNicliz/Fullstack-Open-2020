@@ -15,6 +15,6 @@ const BlogListForm = ({ blogs, user, likeBlogOnClick, removeBlogOnClick }) => {
       )}
     </div>
   );
-}
+};
 
 export default BlogListForm;

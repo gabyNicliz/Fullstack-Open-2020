@@ -20,9 +20,10 @@ const Togglable = (props) => {
       </div>
     </div>
   );
-}
+};
+
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
-}
+};
 
 export default Togglable;

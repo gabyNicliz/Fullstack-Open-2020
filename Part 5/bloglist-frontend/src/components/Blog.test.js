@@ -13,7 +13,7 @@ test('blog form tests', () => {
 
   const user = {
     username: 'test username',
-  }
+  };
 
   const mockHandler = jest.fn();
 
@@ -40,4 +40,4 @@ test('blog form tests', () => {
   fireEvent.click(likeButton);
 
   expect(mockHandler.mock.calls).toHaveLength(2);
-})
+});

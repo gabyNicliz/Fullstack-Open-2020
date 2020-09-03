@@ -16,6 +16,6 @@ const Notification = ({ message, isError }) => {
       </div>
     );
   }
-}
+};
 
 export default Notification;
