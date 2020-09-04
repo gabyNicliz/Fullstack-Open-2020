@@ -94,15 +94,22 @@ const App = () => {
     setBlogs(sortBlogs(updatedBlogs));
   };
 
-  const handleRemoveOnClick = async (blogToRemve) => {
-    const removedBlog = await blogService.removeBlog(blogToRemve);
-    const newBlogs = blogs.filter((blog) => blog.id !== removedBlog.id);
+  const handleRemoveOnClick = async (blogToRemoveId) => {
+    try {
+      const blogToRemove = blogs.filter((blog) => blog.id === blogToRemoveId);
+      if (window.confirm(`Remove ${blogToRemove[0].title} by ${blogToRemove[0].author}`)) {
+        await blogService.removeBlog(blogToRemove[0].id);
+      }
 
-    for (let i = 0; i < blogs.length; i++) console.log(blogs[i].title);
-
-    setBlogs(newBlogs);
-
-    for (let i = 0; i < blogs.length; i++) console.log(blogs[i].title);
+      setBlogs(blogs.filter((blog) => blog.id !== blogToRemoveId));
+    } catch (error) {
+      setErrorMessage(error.response.data.error);
+      setIsError(true);
+      setTimeout(() => {
+        setErrorMessage(null);
+        setIsError(false);
+      }, 5000);
+    }
   };
 
   const blogForm = () => (
@@ -138,11 +145,10 @@ const App = () => {
       {user === null ?
         loginForm() :
         <div>
-          {user.username} logged in <button onClick={handleLogout}>logout</button>
+          {user.username} logged in <button id='log-out-button' onClick={handleLogout}>logout</button>
           {blogForm()}
           <BlogListForm
             blogs={blogs}
-            user={user}
             likeBlogOnClick={handleLikeClick}
             removeBlogOnClick={handleRemoveOnClick}
           />

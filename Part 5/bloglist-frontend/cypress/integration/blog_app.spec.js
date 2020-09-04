@@ -7,6 +7,13 @@ describe('Blog App', function() {
       password: 'secret'
     };
     cy.request('POST', 'http://localhost:3001/api/users/', user);
+    const user2 = {
+      name: 'Test User 2',
+      username: 'testUser2',
+      password: 'secret'
+    };
+    cy.request('POST', 'http://localhost:3001/api/users/', user2);
+
     cy.visit('http://localhost:3000');
   });
 
@@ -82,6 +89,63 @@ describe('Blog App', function() {
         .click();
 
       cy.get('html').should('not.contain', 'new title by new author');
+    });
+
+    describe('different user can\'t delete other\'s blogs', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'new title 2',
+          author: 'new author 2',
+          url: 'new url 2',
+        });
+
+        cy.createBlog({
+          title: 'new title 3',
+          author: 'new author 3',
+          url: 'new url 3',
+        });
+
+        cy.get('#log-out-button').click();
+      });
+
+      it('different can\'t delete other\'s blogs', function() {
+        cy.login({ username: 'testUser2', password: 'secret' });
+
+        cy.contains('new title by new author')
+          .get('#show-info')
+          .click();
+        cy.contains('new title by new author')
+          .get('#remove-button')
+          .click();
+
+        cy.get('html').should('contain', 'unauthorized access')
+          .and('contain', 'new title by new author');
+      });
+    });
+
+    describe('blogs are sorted in descending order according number of likes', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'new title 2',
+          author: 'new author 2',
+          url: 'new url 2',
+          likes: 2,
+        });
+
+        cy.createBlog({
+          title: 'new title 3',
+          author: 'new author 3',
+          url: 'new url 3',
+          likes: 3,
+        });
+      });
+
+      it('blogs are sorted correclty', function() {
+        cy.get('[data-cy="blog-div"]').then(($blogs) => {
+          console.log($blogs);
+          cy.wrap($blogs).should('equal', $blogs.sort((a, b) => b.likes - a.likes));
+        });
+      });
     });
   });
 });

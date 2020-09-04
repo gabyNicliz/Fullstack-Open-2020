@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Blog.css';
 import PropTypes from 'prop-types';
 
-const Blog = ({ blog, user, likeBlogOnCLick, removeBlogOnClick }) => {
+const Blog = ({ blog, likeBlogOnCLick, removeBlogOnClick }) => {
   const [visible, setVisible] = useState(false);
 
   const hideWhenVisible = { display: visible ? 'none' : '' };
@@ -20,20 +20,19 @@ const Blog = ({ blog, user, likeBlogOnCLick, removeBlogOnClick }) => {
     event.preventDefault();
     likeBlogOnCLick({
       ...blog,
-      user: user.id,
+      user: blog.user.id,
       likes: ++blog.likes,
     });
   };
 
   const handleRemoveBlogOnClick = (event) => {
     event.preventDefault();
-    if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
-      removeBlogOnClick(blog);
-    }
+
+    removeBlogOnClick(blog.id);
   };
 
   return (
-    <div style={blogStyle}>
+    <div data-cy='blog-div' style={blogStyle}>
       <div style={hideWhenVisible} className='blog-title-author'>
         {blog.title} by {blog.author} <button id='show-info' onClick={() => setVisible(!visible)}>show</button>
       </div>
@@ -41,7 +40,7 @@ const Blog = ({ blog, user, likeBlogOnCLick, removeBlogOnClick }) => {
         {blog.title} by {blog.author} <button id='hide-info' onClick={() => setVisible(!visible)}>hide</button>
         <p>{blog.url}</p>
         <p>likes: {blog.likes} <button id='like-button' onClick={handleLikeBlogOnClick}>like</button></p>
-        <p>{user.username}</p>
+        <p>{blog.user.username}</p>
         <button id='remove-button' onClick={handleRemoveBlogOnClick}>remove</button>
       </div>
     </div>
@@ -50,7 +49,6 @@ const Blog = ({ blog, user, likeBlogOnCLick, removeBlogOnClick }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
   likeBlogOnCLick: PropTypes.func.isRequired,
   removeBlogOnClick: PropTypes.func.isRequired,
 };

@@ -32,13 +32,13 @@ const likeBlog = async (objToUpdate) => {
   return response.data;
 };
 
-const removeBlog = async (objToRemove) => {
+const removeBlog = async (objIdToRemove) => {
   const config = {
     headers: { Authorization: token },
   };
 
   const response = await axios
-    .delete(`${baseUrl}/${objToRemove.id}`, config);
+    .delete(`${baseUrl}/${objIdToRemove}`, config);
   return response.data;
 };
 

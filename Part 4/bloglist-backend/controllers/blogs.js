@@ -21,6 +21,11 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs.map((blog) => blog.toJSON()));
 });
 
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
+  response.json(blogs.map((blog) => blog.toJSON()));
+});
+
 blogsRouter.post('/', async (request, response) => {
   const { body } = request;
   const token = getTokenFrom(request);
@@ -83,7 +88,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id);
 
   if (blog.user.toString() !== decodedToken.id.toString()) {
-    return response.status(401).json({ error: 'unauthorized acces' });
+    return response.status(401).json({ error: 'unauthorized access' });
   }
 
   await Blog.findByIdAndRemove(request.params.id);
