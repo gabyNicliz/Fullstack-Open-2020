@@ -1,14 +1,12 @@
-const initialState = {
-  message: '',
-  displayTime: 0,
-};
-const notificationReducer = (state = initialState, action) => {
+const notificationReducer = (state = null, action) => {
   switch (action.type) {
     case 'SHOW_NOTIFICATION':
-      clearTimeout(state.displayTime);
+      if (state !== null) {
+        clearTimeout(state.displayTime);
+      }
       return action.data;
     case 'RESET':
-      return initialState;
+      return null;
     default:
       return state;
   }

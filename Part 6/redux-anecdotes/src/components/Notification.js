@@ -11,7 +11,8 @@ const Notification = () => {
   };
   return (
     <div>
-      {notification.message !== '' &&
+      {notification === null ?
+      null :
       <div style={style}>
         {notification.message}
       </div>}
