@@ -23,12 +23,8 @@ const create = async (newObject) => {
 };
 
 const likeBlog = async (objToUpdate) => {
-  const config = {
-    headers: { Authorization: token },
-  };
-
   const response = await axios
-    .put(`${baseUrl}/${objToUpdate.id}`, objToUpdate, config);
+    .put(`${baseUrl}/${objToUpdate.id}`, objToUpdate);
   return response.data;
 };
 
