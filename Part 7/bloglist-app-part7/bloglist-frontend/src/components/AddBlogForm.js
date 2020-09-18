@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { createBlog } from '../reducers/blogsReducer';
+import { showMessage } from '../reducers/notificationReducer';
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = (props) => {
   const [newTitle, setNewTitle] = useState('');
   const [newAuthor, setNewAuthor] = useState('');
   const [newURL, setNewURL] = useState('');
 
+  const dispatch = useDispatch();
+
   const addBlog = (event) => {
     event.preventDefault();
-    createBlog({
+    const newBlog = {
       title: newTitle,
       author: newAuthor,
       url: newURL,
-    });
+    };
 
+    dispatch(createBlog(newBlog));
+    dispatch(showMessage(`A new blog ${newBlog.title} by ${newBlog.author} added`, 5));
     setNewTitle('');
     setNewAuthor('');
     setNewURL('');

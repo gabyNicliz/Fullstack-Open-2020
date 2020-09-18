@@ -1,14 +1,14 @@
 const notificationReducer = (state = null, action) => {
   switch (action.type) {
-  case 'SHOW_NOTIFICATION':
-    if (state !== null) {
-      clearTimeout(state.displayTime);
-    }
-    return action.data;
-  case 'RESET':
-    return null;
-  default:
-    return state;
+    case 'SHOW_NOTIFICATION':
+      if (state !== null) {
+        clearTimeout(state.displayTime);
+      }
+      return action.data;
+    case 'RESET':
+      return null;
+    default:
+      return state;
   }
 };
 
