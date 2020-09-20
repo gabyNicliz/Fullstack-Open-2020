@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import blogService from '../services/blogs';
+import blogsService from '../services/blogs';
 
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes);
 
@@ -28,7 +28,7 @@ const blogsReducer = (state = [], action) => {
 
 export const createBlog = (blog) => {
   return async (dispatch) => {
-    const newBlog = await blogService.create(blog);
+    const newBlog = await blogsService.create(blog);
     dispatch({
       type: 'NEW_BLOG',
       data: newBlog,
@@ -42,7 +42,7 @@ export const likeBlog = (blog) => {
       ...blog,
       likes: blog.likes + 1,
     };
-    const likedBlog = await blogService.likeBlog(blogToLike);
+    const likedBlog = await blogsService.likeBlog(blogToLike);
     dispatch({
       type: 'LIKE',
       data: { id: likedBlog.id },
@@ -52,7 +52,7 @@ export const likeBlog = (blog) => {
 
 export const removeBlog = (id) => {
   return async (dispatch) => {
-    await blogService.removeBlog(id);
+    await blogsService.removeBlog(id);
     dispatch({
       type: 'REMOVE_BLOG',
       data: { id },
@@ -62,7 +62,7 @@ export const removeBlog = (id) => {
 
 export const initializeBlogs = () => {
   return async (dispatch) => {
-    const blogs = await blogService.getAll();
+    const blogs = await blogsService.getAll();
     dispatch({
       type: 'INIT_BLOGS',
       data: blogs,
