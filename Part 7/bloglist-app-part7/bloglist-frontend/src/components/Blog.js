@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Blog.css';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { likeBlog, removeBlog } from '../reducers/blogsReducer';
+import { showMessage } from '../reducers/notificationReducer';
 
-const Blog = ({ blog, handleLikeClick, handleRemoveClick }) => {
-  const [visible, setVisible] = useState(false);
+const Blog = ({ blogs }) => {
+  const dispatch = useDispatch();
+  const id = useParams().id;
+  const blog = blogs.find((b) => b.id ===id);
 
-  const hideWhenVisible = { display: visible ? 'none' : '' };
-  const showWhenVisible = { display: visible ? '' : 'none' };
+  if (!blog) return null;
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+  const handleLike = (event) => {
+    event.preventDefault();
+    dispatch(likeBlog(blog));
+    dispatch(showMessage(`Liked ${blog.title} by ${blog.author}`, 5));
+  };
+
+  const handleRemove = (event) => {
+    event.preventDefault();
+    dispatch(removeBlog(blog.id));
+    dispatch(showMessage(`Removed ${blog.title} by ${blog.author}`, 5));
   };
 
   return (
-    <div data-cy='blog-div' style={blogStyle}>
-      <div style={hideWhenVisible} className='blog-title-author'>
-        {blog.title} by {blog.author} <button id='show-info' onClick={() => setVisible(!visible)}>show</button>
-      </div>
-      <div style={showWhenVisible} className='blog-show-all-info'>
-        {blog.title} by {blog.author} <button id='hide-info' onClick={() => setVisible(!visible)}>hide</button>
-        <p>{blog.url}</p>
-        <p>likes: {blog.likes} <button id='like-button' onClick={handleLikeClick}>like</button></p>
-        <p>{blog.user.username}</p>
-        <button id='remove-button' onClick={handleRemoveClick}>remove</button>
-      </div>
+    <div data-cy='blog-div'>
+      <h2>{blog.title} by {blog.author}</h2>
+      <p>{blog.url}</p>
+      <p>likes: {blog.likes} <button id='like-button' onClick={handleLike}>like</button></p>
+      <p>{blog.user.username}</p>
     </div>
   );
 };

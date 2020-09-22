@@ -1,15 +1,15 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { userLogin } from '../reducers/loginReducer';
 import { useField } from '../hooks/index';
+import { useHistory } from 'react-router-dom';
 
 const LoginForm = () => {
   const { reset: resetUsername, ...username } = useField('text');
   const { reset: resetPassword, ...password } = useField('text');
 
-  const user = useSelector(state => state.login);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -21,6 +21,7 @@ const LoginForm = () => {
     dispatch(userLogin(user));
     resetUsername();
     resetPassword();
+    history.push('/');
   };
 
   return (
@@ -41,13 +42,5 @@ const LoginForm = () => {
   );
 
 };
-
-/*LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  setPassword: PropTypes.func.isRequired,
-};*/
 
 export default LoginForm;
