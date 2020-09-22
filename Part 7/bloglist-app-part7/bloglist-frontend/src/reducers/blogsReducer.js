@@ -19,6 +19,17 @@ const blogsReducer = (state = [], action) => {
         .map((blog) => blog.id === id ? likedBlog : blog));
     case 'REMOVE_BLOG':
       return state.filter((b) => b.id !== action.data.id);
+    case 'ADD_COMMENT':
+      const blogId = action.data.blog;
+      const blog = state.find((b) => b.id === blogId);
+
+      const commentedBlog = {
+        ...blog,
+        comments: [ ...blog.comments, action.data ],
+      };
+
+      return state
+        .map((blog) => blog.id === blogId ? commentedBlog : blog);
     case 'INIT_BLOGS':
       return action.data;
     default:
@@ -46,6 +57,22 @@ export const likeBlog = (blog) => {
     dispatch({
       type: 'LIKE',
       data: { id: likedBlog.id },
+    });
+  };
+};
+
+export const addComment = (id, content) => {
+  return async (dispatch) => {
+    const newComment = {
+      content,
+      blog: id,
+    };
+
+    const addedComment = await blogsService.addComment(id, newComment);
+
+    dispatch({
+      type: 'ADD_COMMENT',
+      data: addedComment,
     });
   };
 };

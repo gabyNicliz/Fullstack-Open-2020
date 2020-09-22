@@ -19,7 +19,7 @@ const NavigationBar = ({ user, handleLogout }) => {
       <Link style={padding} to='/'>blogs</Link>
       <Link style={padding} to='/users'>users</Link>
       {user
-        ? <div style={padding}>{user.username} logged in <button id='log-out-button' onClick={handleLogout}>logout</button></div>
+        ? <>{user.username} logged in <button id='log-out-button' onClick={handleLogout}>logout</button></>
         : <Link style={padding} to='/login'><button>login</button></Link>
       }
     </div>
