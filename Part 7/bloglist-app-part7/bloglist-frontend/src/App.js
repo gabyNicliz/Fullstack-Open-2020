@@ -5,6 +5,7 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
+import Container from '@material-ui/core/Container';
 import blogService from './services/blogs';
 import Notification from './components/Notification';
 import BlogListForm from './components/BlogListForm';
@@ -52,46 +53,48 @@ const App = () => {
   );
 
   return (
-    <div className='App'>
-      <h2>blogs</h2>
-      <Notification />
-      <Router>
-        <NavigationBar
-          user={user}
-          handleLogout={handleLogout}
-        />
-        <Switch>
-          <Route path='/blogs/:id'>
-            <Blog blogs={blogs} />
-          </Route>
-          <Route path='/users/:id'>
-            <User users={users} />
-          </Route>
-          <Route path='/users'>
-            <UsersList users={users} />
-          </Route>
-          <Route path='/login'>
-            {user
-              ? <Redirect to='/' />
-              : <LoginForm />
-            }
-          </Route>
-          <Route path='/create-blog'>
-            {blogForm()}
-          </Route>
-          <Route path='/'>
-            {user
-              ?
-              <div>
-                {blogForm()}
-                <BlogListForm blogs={blogs} />
-              </div>
-              : <Redirect to='/' />
-            }
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+    <Container>
+      <div className='App'>
+        <Notification />
+        <Router>
+          <NavigationBar
+            user={user}
+            handleLogout={handleLogout}
+          />
+          <h2>Blog App</h2>
+          <Switch>
+            <Route path='/blogs/:id'>
+              <Blog blogs={blogs} />
+            </Route>
+            <Route path='/users/:id'>
+              <User users={users} />
+            </Route>
+            <Route path='/users'>
+              <UsersList users={users} />
+            </Route>
+            <Route path='/login'>
+              {user
+                ? <Redirect to='/' />
+                : <LoginForm />
+              }
+            </Route>
+            <Route path='/create-blog'>
+              {blogForm()}
+            </Route>
+            <Route path='/'>
+              {user
+                ?
+                <div>
+                  {blogForm()}
+                  <BlogListForm blogs={blogs} />
+                </div>
+                : <Redirect to='/' />
+              }
+            </Route>
+          </Switch>
+        </Router>
+      </div>
+    </Container>
   );
 };
 

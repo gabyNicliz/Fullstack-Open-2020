@@ -4,6 +4,10 @@ import { useDispatch } from 'react-redux';
 import { createBlog } from '../reducers/blogsReducer';
 import { showMessage } from '../reducers/notificationReducer';
 import { useField } from '../hooks/index';
+import {
+  TextField,
+  Button,
+} from '@material-ui/core';
 
 const BlogForm = (props) => {
   const { reset: resetTitle, ...title } = useField('text');
@@ -31,20 +35,17 @@ const BlogForm = (props) => {
       <br></br>
       <form onSubmit={addBlog}>
         <div>
-          title:
-          <input id='title' { ...title } />
+          <TextField label='title' { ...title } />
         </div>
         <div>
-          author:
-          <input id='author' { ...author } />
+          <TextField label='author' { ...author } />
         </div>
         <div>
-          url:
-          <input id='url' { ...url } />
+          <TextField label='url' { ...url } />
         </div>
-        <div>
-          <button type='submit' id='submit-blog-button'>create</button>
-        </div>
+        <Button variant='contained' color='primary' size='small' type='submit'>
+          create
+        </Button>
       </form>
     </div>
   );

@@ -1,28 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import {
+  Button,
+  Toolbar,
+  AppBar
+} from '@material-ui/core';
 
 const NavigationBar = ({ user, handleLogout }) => {
 
-  const divStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    borderWidth: 1,
-    marginBottom: 5,
-    backgroundColor: 'lightGrey',
-  };
-  const padding = {
-    padding: 4
-  };
-
   return (
-    <div style={divStyle}>
-      <Link style={padding} to='/'>blogs</Link>
-      <Link style={padding} to='/users'>users</Link>
-      {user
-        ? <>{user.username} logged in <button id='log-out-button' onClick={handleLogout}>logout</button></>
-        : <Link style={padding} to='/login'><button>login</button></Link>
-      }
-    </div>
+    <AppBar position='static'>
+      <Toolbar>
+        <Button color='inherit' component={Link} to='/'>
+          blogs
+        </Button>
+        <Button color='inherit' component={Link} to='/users'>
+          users
+        </Button>
+        {user
+          ? <p>{user.username} logged in <Button onClick={handleLogout}>
+            logout
+          </Button></p>
+          : <Button color='white' component={Link} to='/login'>
+            login
+          </Button>
+        }
+      </Toolbar>
+    </AppBar>
   );
 };
 

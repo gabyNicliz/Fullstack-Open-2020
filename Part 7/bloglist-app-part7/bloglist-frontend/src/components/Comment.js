@@ -1,8 +1,11 @@
 import React from 'react';
 
 const Comment = ({ comment }) => {
+  const liStyle = {
+    margin: 10
+  };
   return (
-    <li>{comment.content}</li>
+    <li style={liStyle}>{comment.content}</li>
   );
 };
 

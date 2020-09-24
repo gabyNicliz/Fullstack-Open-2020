@@ -3,6 +3,10 @@ import { useDispatch } from 'react-redux';
 import { userLogin } from '../reducers/loginReducer';
 import { useField } from '../hooks/index';
 import { useHistory } from 'react-router-dom';
+import {
+  TextField,
+  Button,
+} from '@material-ui/core';
 
 const LoginForm = () => {
   const { reset: resetUsername, ...username } = useField('text');
@@ -29,14 +33,14 @@ const LoginForm = () => {
       <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
-            username
-          <input id='username' { ...username } />
+          <TextField label='username' { ...username } />
         </div>
         <div>
-            password
-          <input id='password' { ...password } />
+          <TextField label='password' type='password' { ...password } />
         </div>
-        <button type='submit' id='login-button'>login</button>
+        <Button variant='contained' color='primary' size='small' type='submit'>
+          login
+        </Button>
       </form>
     </div>
   );
