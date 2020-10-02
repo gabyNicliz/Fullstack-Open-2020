@@ -11,7 +11,7 @@ const Books = ({ show }) => {
   if (!show) return null;
 
   if (loading) return <div>loading...</div>;
-
+  console.log(data)
   const books = [...data.allBooks];
 
   return (
@@ -32,7 +32,7 @@ const Books = ({ show }) => {
           {books.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           ))}
