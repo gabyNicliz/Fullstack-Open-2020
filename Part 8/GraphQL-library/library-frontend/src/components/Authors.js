@@ -8,7 +8,7 @@ import Select from 'react-select';
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries';
 import { useField } from '../hooks/index';
 
-const Authors = ({ show }) => {
+const Authors = ({ show, setMessage }) => {
   const { data, loading } = useQuery(ALL_AUTHORS);
   const [editAuthor, result] = useMutation(EDIT_AUTHOR,
     { refetchQueries: [{ query: ALL_AUTHORS }] });
@@ -17,7 +17,10 @@ const Authors = ({ show }) => {
 
   useEffect(() => {
     if (result.data && result.data.editAuthor === null) {
-      console.log('author not found');
+      setMessage('author not found');
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     }
   }, [result.data]);
 

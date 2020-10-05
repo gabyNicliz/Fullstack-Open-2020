@@ -78,7 +78,7 @@ const typeDefs = gql`
       title: String!
       author: String!
       published: Int!
-      genres: [String!]!
+      genres: [String]!
     ): Book
     editAuthor(
       name: String!,
@@ -102,7 +102,10 @@ const resolvers = {
       return Book.find({ genres: args.genre, author: args.author }).populate('author');
     },
     allAuthors: () => Author.find({}),
-    me: (root, args, context) => context.currentUser,
+    me: (root, args, context) => {
+      console.log(context.currentUser);
+      return context.currentUser;
+    },
   },
   Author: {
     bookCount: async (root) => {
@@ -110,36 +113,52 @@ const resolvers = {
       return books.length;
     },
   },
+  Book: {
+    author: async (root) => {
+      const author = await Author.findById(root.author);
+
+      if (!author) return null;
+
+      return {
+        name: author.name,
+        born: author.born,
+        bookCount: author.bookCount,
+      };
+    },
+  },
+
   Mutation: {
     addBook: async (root, args, context) => {
-      let author = await Author.findOne({ name: args.author });
-
       const { currentUser } = context;
-
+      let book;
       if (!currentUser) {
         throw new AuthenticationError('not logged in');
       }
 
-      if (!author) {
-        author = new Author({ name: args.author });
-        try {
-          await author.save();
-        } catch (error) {
-          throw new UserInputError(error.message, {
-            invalidArgs: args,
-          });
-        }
-      }
-
-      const book = new Book({ ...args, author: author._id });
-
       try {
+        let author = await Author.findOne({ name: args.author });
+
+        if (!author) {
+          author = new Author({
+            name: args.author,
+            born: null,
+          });
+
+          author = await author.save();
+        }
+
+        book = new Book({
+          ...args,
+          author: author._id,
+        });
+
         await book.save();
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
         });
       }
+
       return book;
     },
     editAuthor: async (root, args, context) => {
