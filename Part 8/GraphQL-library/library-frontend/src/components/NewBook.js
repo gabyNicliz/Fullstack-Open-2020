@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/client';
 import { useField } from '../hooks/index';
 import { ALL_AUTHORS, ALL_BOOKS, ADD_BOOK } from '../queries';
 
-const NewBook = ({ show, setMessage, setPage }) => {
+const NewBook = ({ show, setMessage, setPage, updateCacheWith }) => {
   const { reset: resetTitle, ...title } = useField('text');
   const { reset: resetAuthor, ...author } = useField('text');
   const { reset: resetPublished, ...published } = useField('text');
@@ -18,6 +18,9 @@ const NewBook = ({ show, setMessage, setPage }) => {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
     onError: (error) => {
       setMessage(error.graphQLErrors[0].message);
+    },
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook);
     },
   });
 
