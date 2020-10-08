@@ -31,8 +31,8 @@ const calculateExercises = (exerciseArgs: number[]): TrainingTargetResult => {
     return totalDays;
   }, 0);
 
-  let rating: number;
-  let ratingDescription: string;
+  let rating: number = 0;
+  let ratingDescription: string = '';
 
   if (average < (target / 2)) {
     rating = 1;
