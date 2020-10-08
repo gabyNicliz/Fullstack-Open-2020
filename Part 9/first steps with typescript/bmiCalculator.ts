@@ -1,22 +1,3 @@
-interface BmiValues {
-  heigth: number;
-  weight: number;
-}
-
-const parseBmiArguments = (args: Array<string>): BmiValues => {
-  if (args.length < 4) throw new Error('Not enough arguments');
-  if (args.length > 4) throw new Error('Too many arguments');
-
-  if (!isNaN(+args[2]) && !isNaN(+args[3])) {
-    return {
-      heigth: +args[2],
-      weight: +args[3],
-    };
-  } else {
-    throw new Error('the program only accepts numbers as valid values');
-  }
-}
-
 export const calculateBmi = (heigth: number, weight: number): string => {
   const heigthInMeters = heigth / 100;
   const bodyMassIndex = weight / (heigthInMeters * heigthInMeters);
@@ -38,11 +19,4 @@ export const calculateBmi = (heigth: number, weight: number): string => {
   } else {
     return 'Obese Class III (Very severely obese)';
   }
-}
-
-try {
-  const { heigth, weight } = parseBmiArguments(process.argv);
-  console.log(calculateBmi(heigth, weight));
-} catch (error) {
-  console.log(error.message);
-}
+};
